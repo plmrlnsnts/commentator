@@ -14,7 +14,7 @@ class Commentator
      */
     public function getCommentable($key)
     {
-        [$alias, $id] = explode('::', $key);
+        [$alias, $id] = explode('::', base64_decode($key));
 
         $class = Relation::getMorphedModel($alias) ?? $alias;
 

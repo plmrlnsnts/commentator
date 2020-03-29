@@ -43,7 +43,7 @@ class CommentTest extends TestCase
     /** @test */
     public function it_can_determine_mentioned_names()
     {
-        $comment = factory(Comment::class)->create(['body' => 'Hey @John!']);
+        $comment = new Comment(['body' => 'Hey @John!']);
 
         $this->assertContains('John', $comment->mentionedNames());
     }
@@ -60,5 +60,13 @@ class CommentTest extends TestCase
         $comment->update(['body' => 'Changed']);
 
         $this->assertTrue($comment->isEdited());
+    }
+
+    /** @test */
+    public function it_transforms_mentions_to_links()
+    {
+        $comment = new Comment(['body' => 'Hi @john']);
+
+        $this->assertEquals('Hi <a href="/profile/john">@john</a>', $comment->body);
     }
 }

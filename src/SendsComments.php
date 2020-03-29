@@ -3,6 +3,7 @@
 namespace Plmrlnsnts\Commentator;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Gate;
 use Plmrlnsnts\Commentator\Comment;
 use Plmrlnsnts\Commentator\Facades\Commentator;
@@ -19,7 +20,13 @@ trait SendsComments
     {
         $commentable = Commentator::getCommentable($key);
 
-        return $commentable->comments;
+        return JsonResource::collection(
+            $commentable->comments()
+                ->with('author')
+                ->withCount('comments')
+                ->orderByDesc('id')
+                ->cursorPaginate()
+        );
     }
 
     /**
@@ -31,13 +38,13 @@ trait SendsComments
      */
     public function store(Request $request, $key)
     {
-        $this->validateRequest($request);
+        $attributes = $this->validateRequest($request);
 
         $commentable = Commentator::getCommentable($key);
 
-        $comment = $commentable->comment($request['body']);
+        $comment = $commentable->addComment($attributes);
 
-        return $this->created($request, $comment) ?: $comment;
+        return $this->created($request, $comment) ?: new JsonResource($comment);
     }
 
     /**
@@ -55,7 +62,7 @@ trait SendsComments
 
         $comment->update($attributes);
 
-        return $this->updated($request, $comment) ?: $comment;
+        return $this->updated($request, $comment) ?: new JsonResource($comment);
     }
 
     /**
@@ -80,7 +87,8 @@ trait SendsComments
     protected function validateRequest(Request $request)
     {
         return $request->validate([
-            'body' => ['required', 'string']
+            'body' => ['required', 'string'],
+            'media' => ['nullable', 'url'],
         ]);
     }
 

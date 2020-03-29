@@ -3,11 +3,12 @@
 namespace Plmrlnsnts\Commentator;
 
 use Illuminate\Database\Eloquent\Model;
-use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Plmrlnsnts\Commentator\NewComment;
 
 class Comment extends Model
 {
+    use HasComments;
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -73,7 +74,11 @@ class Comment extends Model
       */
      public function mentionedNames()
      {
-        preg_match_all('/@([\w\-]+)/', $this->body, $matches);
+        preg_match_all(
+            config('commentator.mentions.regex'),
+            $this->body,
+            $matches
+        );
 
         return $matches[1];
      }
@@ -89,15 +94,16 @@ class Comment extends Model
      }
 
      /**
-      * The html representation of the comment.
+      * Set the body attribute
       *
       * @return string
       */
-     public function getBody()
+     public function setBodyAttribute($value)
      {
-        return (new GithubFlavoredMarkdownConverter([
-            'html_input' => 'escape',
-            'allow_unsafe_links' => false,
-        ]))->convertToHtml($this->attributes['body']);
+        $this->attributes['body'] = preg_replace(
+            config('commentator.mentions.regex'),
+            config('commentator.mentions.replace'),
+            $value
+        );
      }
 }

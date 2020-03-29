@@ -4,11 +4,6 @@ namespace Plmrlnsnts\Commentator;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
-use Plmrlnsnts\Commentator\Livewire\CommentCreateForm;
-use Plmrlnsnts\Commentator\Livewire\CommentList;
-use Plmrlnsnts\Commentator\Livewire\CommentListItem;
-use Plmrlnsnts\Commentator\Livewire\Comments;
 
 class CommentatorServiceProvider extends ServiceProvider
 {
@@ -21,19 +16,13 @@ class CommentatorServiceProvider extends ServiceProvider
     {
         Gate::policy(Comment::class, CommentPolicy::class);
 
-        Livewire::component('commentator::comments', Comments::class);
-        Livewire::component('commentator::comment-list', CommentList::class);
-        Livewire::component('commentator::comment-list-item', CommentListItem::class);
-        Livewire::component('commentator::comment-create-form', CommentCreateForm::class);
-
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'commentator');
+        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'commentator');
 
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'plmrlnsnts');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'plmrlnsnts');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
-        // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
@@ -83,9 +72,9 @@ class CommentatorServiceProvider extends ServiceProvider
         ], 'migrations');
 
         // Publishing the views.
-        $this->publishes([
-            __DIR__.'/../resources/views' => resource_path('views/vendor/commentator'),
-        ]);
+        // $this->publishes([
+        //     __DIR__.'/../resources/views' => resource_path('views/vendor/commentator'),
+        // ]);
 
         // Publishing assets.
         /*$this->publishes([

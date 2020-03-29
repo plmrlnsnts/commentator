@@ -30,9 +30,15 @@ class SendsCommentsTest extends TestCase
     /** @test */
     public function a_user_can_view_all_comments()
     {
-        $comment = factory(Comment::class)->create();
+        $commentable = factory(Commentable::class)->create();
 
-        $this->get($comment->commentable->commentableUrl())->assertSuccessful();
+        factory(Comment::class, 30)->create([
+            'commentable_id' => $commentable->id
+        ]);
+
+        $this->json('get', $commentable->commentableUrl(), ['perPage' => 15])
+            ->assertJsonCount(15, 'data')
+            ->assertSuccessful();
     }
 
     /** @test */
@@ -42,7 +48,7 @@ class SendsCommentsTest extends TestCase
 
         $commentable = factory(Commentable::class)->create();
 
-        $this->post($commentable->commentableUrl(), ['body' => 'Yo!']);
+        $this->post($commentable->commentableUrl(), factory(Comment::class)->raw());
 
         $this->assertCount(1, $commentable->comments);
     }

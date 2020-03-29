@@ -25,17 +25,16 @@ trait HasComments
     }
 
     /**
-     * Create a new comment to this model.
+     * Add a new comment to this model.
      *
-     * @param string $body
+     * @param array $values
      * @return \Plmrlnsnts\Commentator\Comment
      */
-    public function comment($body)
+    public function addComment($values)
     {
-        return $this->comments()->create([
-            'user_id' => auth()->id(),
-            'body' => $body
-        ]);
+        $values['user_id'] ??= auth()->id();
+
+        return $this->comments()->create($values);
     }
 
     /**
@@ -45,7 +44,7 @@ trait HasComments
      */
     public function commentableKey()
     {
-        return $this->getMorphClass() . '::' . $this->id;
+        return base64_encode($this->getMorphClass() . '::' . $this->id);
     }
 
     /**

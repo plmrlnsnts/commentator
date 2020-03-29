@@ -15,7 +15,7 @@ class HasCommentsTest extends TestCase
 
         $commentable = factory(Commentable::class)->create();
 
-        $commentable->comment('Yo!');
+        $commentable->addComment(['body' => 'Yo!']);
 
         $this->assertCount(1, $commentable->comments);
     }
@@ -36,7 +36,7 @@ class HasCommentsTest extends TestCase
     {
         $commentable = factory(Commentable::class)->create();
 
-        $expected = $commentable->getMorphClass() . '::' . $commentable->id;
+        $expected = base64_encode($commentable->getMorphClass() . '::' . $commentable->id);
 
         $this->assertEquals($expected, $commentable->commentableKey());
     }
@@ -48,6 +48,6 @@ class HasCommentsTest extends TestCase
 
         $commentable = factory(Commentable::class)->create();
 
-        $this->assertEquals('commentables::' . $commentable->id, $commentable->commentableKey());
+        $this->assertEquals(base64_encode('commentables::' . $commentable->id), $commentable->commentableKey());
     }
 }
