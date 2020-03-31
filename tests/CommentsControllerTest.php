@@ -14,16 +14,13 @@ class CommentsControllerTest extends TestCase
     /** @test */
     public function a_user_can_view_all_comments()
     {
-        $this->withoutExceptionHandling();
+        $commentable = factory(Commentable::class)->create();
 
-        $comment = factory(Comment::class)->create();
+        factory(Comment::class)->create(['commentable_id' => $commentable->id]);
 
-        $response = $this->json('get', '/comments', [
-            'commentableKey' => $comment->commentable->commentableKey(),
-        ]);
-
-        $response->assertSuccessful();
-        $response->assertJsonCount(1, 'data');
+        $this->json('get', '/comments', [
+            'commentableKey' => $commentable->commentableKey(),
+        ])->assertSuccessful();
     }
 
     /** @test */
@@ -55,8 +52,6 @@ class CommentsControllerTest extends TestCase
     /** @test */
     public function a_user_can_delete_a_comment()
     {
-        $this->withoutExceptionHandling();
-
         $comment = factory(Comment::class)->create();
 
         $this->be($comment->author);

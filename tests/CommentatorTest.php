@@ -32,5 +32,6 @@ class CommentatorTest extends TestCase
         $this->assertTrue(Route::has('comments.store'));
         $this->assertTrue(Route::has('comments.update'));
         $this->assertTrue(Route::has('comments.destroy'));
+        $this->assertTrue(Route::has('comments.replies.index'));
     }
 }

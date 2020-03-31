@@ -3,6 +3,7 @@
 namespace Plmrlnsnts\Commentator;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 use Plmrlnsnts\Commentator\NewComment;
 use Stevebauman\Purify\Facades\Purify;
 
@@ -95,7 +96,7 @@ class Comment extends Model
       *
       * @return string
       */
-     public function getHtmlAttribute()
+     public function asHtml()
      {
         $html = preg_replace(
             config('commentator.mentions.regex'),
@@ -121,4 +122,22 @@ class Comment extends Model
 
          return $this->replies()->create($values);
      }
+
+     /**
+     * Convert the model instance to an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array_merge(parent::toArray(), [
+            'html' => $this->asHtml(),
+            'isEdited' => $this->isEdited(),
+            'mentionedNames' => $this->mentionedNames(),
+            'can' => [
+                'update' => Gate::check('update', $this),
+                'delete' => Gate::check('delete', $this),
+            ]
+        ]);
+    }
 }

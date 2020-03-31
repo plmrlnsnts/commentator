@@ -17,13 +17,11 @@ class CommentsController
      */
     public function index()
     {
-        $commentable = Commentator::getCommentable(request('commentableKey'));
-
-        return JsonResource::collection(
-            $commentable->comments()
-                ->withCount('replies')
-                ->paginate(request('perPage'))
-        );
+        return Commentator::getCommentable(request('commentableKey'))
+            ->comments()
+            ->with('author')
+            ->withCount('replies')
+            ->paginate(request('perPage'));
     }
 
     /**
@@ -38,9 +36,7 @@ class CommentsController
 
         $commentable = Commentator::getCommentable(request('commentableKey'));
 
-        $comment = $commentable->addComment($attributes);
-
-        return new JsonResource($comment);
+        return $commentable->addComment($attributes);
     }
 
     /**
@@ -56,9 +52,7 @@ class CommentsController
 
         $attributes = $this->validateRequest($request);
 
-        $comment->update($attributes);
-
-        return new JsonResource($comment);
+        return tap($comment)->update($attributes);
     }
 
     /**

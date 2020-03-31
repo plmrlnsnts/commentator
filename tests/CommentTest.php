@@ -62,7 +62,7 @@ class CommentTest extends TestCase
     {
         $comment = new Comment(['body' => 'Hi @john']);
 
-        $this->assertEquals('Hi <a href="/profile/john">@john</a>', $comment->html);
+        $this->assertEquals('Hi <a href="/profile/john">@john</a>', $comment->asHtml());
     }
 
     /** @test */
