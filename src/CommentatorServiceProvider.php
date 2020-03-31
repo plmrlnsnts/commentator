@@ -63,8 +63,5 @@ class CommentatorServiceProvider extends ServiceProvider
             __DIR__.'/../database/migrations/create_comments_table.php' =>
                 database_path('migrations/' . date('Y_m_d_His') . '_create_comments_table.php')
         ], 'migrations');
-
-        // Registering package commands.
-        $this->commands([CommentatorCommand::class]);
     }
 }
