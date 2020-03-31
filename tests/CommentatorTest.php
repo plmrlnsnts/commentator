@@ -2,12 +2,15 @@
 
 namespace Plmrlnsnts\Commentator\Tests;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 use Plmrlnsnts\Commentator\Facades\Commentator;
 use Plmrlnsnts\Commentator\Tests\Fixtures\Commentable;
 
 class CommentatorTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function it_can_retrieve_the_commentable_model()
     {

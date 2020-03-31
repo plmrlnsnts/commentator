@@ -13,19 +13,16 @@ trait SendsComments
     /**
      * Get all comments.
      *
-     * @param string $key
      * @return \Illuminate\Http\Response
      */
-    public function index($key)
+    public function index()
     {
-        $commentable = Commentator::getCommentable($key);
+        $commentable = Commentator::getCommentable(request('commentableKey'));
 
         return JsonResource::collection(
             $commentable->comments()
-                ->with('author')
-                ->withCount('comments')
-                ->orderByDesc('id')
-                ->cursorPaginate()
+                ->withCount('replies')
+                ->paginate(request('perPage'))
         );
     }
 
@@ -33,14 +30,13 @@ trait SendsComments
      * Store a new comment.
      *
      * @param \Illuminate\Http\Request $request
-     * @param string $key
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $key)
+    public function store(Request $request)
     {
         $attributes = $this->validateRequest($request);
 
-        $commentable = Commentator::getCommentable($key);
+        $commentable = Commentator::getCommentable(request('commentableKey'));
 
         $comment = $commentable->addComment($attributes);
 

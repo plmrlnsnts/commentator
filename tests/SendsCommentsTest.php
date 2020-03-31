@@ -2,6 +2,7 @@
 
 namespace Plmrlnsnts\Commentator\Tests;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 use Plmrlnsnts\Commentator\Comment;
 use Plmrlnsnts\Commentator\Tests\Fixtures\CommentsController;
@@ -10,6 +11,8 @@ use Plmrlnsnts\Commentator\Tests\Fixtures\User;
 
 class SendsCommentsTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Setup the test environment.
      *
@@ -20,8 +23,8 @@ class SendsCommentsTest extends TestCase
         parent::setUp();
 
         Route::middleware('bindings')->group(function() {
-            Route::get('/{commentable}/comments', [CommentsController::class, 'index']);
-            Route::post('/{commentable}/comments', [CommentsController::class, 'store']);
+            Route::get('/comments', [CommentsController::class, 'index']);
+            Route::post('/comments', [CommentsController::class, 'store']);
             Route::patch('/comments/{comment}', [CommentsController::class, 'update']);
             Route::delete('/comments/{comment}', [CommentsController::class, 'destroy']);
         });
@@ -30,15 +33,16 @@ class SendsCommentsTest extends TestCase
     /** @test */
     public function a_user_can_view_all_comments()
     {
-        $commentable = factory(Commentable::class)->create();
+        $this->withoutExceptionHandling();
 
-        factory(Comment::class, 30)->create([
-            'commentable_id' => $commentable->id
+        $comment = factory(Comment::class)->create();
+
+        $response = $this->json('get', '/comments', [
+            'commentableKey' => $comment->commentable->commentableKey(),
         ]);
 
-        $this->json('get', $commentable->commentableUrl(), ['perPage' => 15])
-            ->assertJsonCount(15, 'data')
-            ->assertSuccessful();
+        $response->assertSuccessful();
+        $response->assertJsonCount(1, 'data');
     }
 
     /** @test */
@@ -48,7 +52,9 @@ class SendsCommentsTest extends TestCase
 
         $commentable = factory(Commentable::class)->create();
 
-        $this->post($commentable->commentableUrl(), factory(Comment::class)->raw());
+        $this->post('/comments', factory(Comment::class)->raw([
+            'commentableKey' => $commentable->commentableKey(),
+        ]));
 
         $this->assertCount(1, $commentable->comments);
     }
@@ -60,7 +66,7 @@ class SendsCommentsTest extends TestCase
 
         $this->be($comment->author);
 
-        $this->patch($comment->url(), ['body' => 'Changed']);
+        $this->patch("/comments/{$comment->id}", ['body' => 'Changed']);
 
         $this->assertEquals('Changed', $comment->fresh()->body);
     }
@@ -72,7 +78,7 @@ class SendsCommentsTest extends TestCase
 
         $this->be($comment->author);
 
-        $this->delete($comment->url());
+        $this->delete("/comments/{$comment->id}");
 
         $this->assertNull($comment->fresh());
     }
@@ -84,8 +90,8 @@ class SendsCommentsTest extends TestCase
 
         $comment = factory(Comment::class)->create();
 
-        $this->patch($comment->url())->assertForbidden();
+        $this->patch("/comments/{$comment->id}")->assertForbidden();
 
-        $this->delete($comment->url())->assertForbidden();
+        $this->delete("/comments/{$comment->id}")->assertForbidden();
     }
 }

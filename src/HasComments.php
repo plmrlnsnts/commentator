@@ -2,6 +2,8 @@
 
 namespace Plmrlnsnts\Commentator;
 
+use Plmrlnsnts\Commentator\Comment;
+
 trait HasComments
 {
     /**
@@ -48,12 +50,12 @@ trait HasComments
     }
 
     /**
-      * The resource url for this model's comments.
-      *
-      * @return string
-      */
-      public function commentableUrl()
-      {
-          return url($this->commentableKey() . '/comments');
-      }
+     * Get the commentable key attribute.
+     *
+     * @return string
+     */
+    public function getCommentableKeyAttribute()
+    {
+        return $this->commentableKey();
+    }
 }

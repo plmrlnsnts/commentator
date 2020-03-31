@@ -2,6 +2,7 @@
 
 namespace Plmrlnsnts\Commentator\Tests;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Plmrlnsnts\Commentator\Comment;
 use Plmrlnsnts\Commentator\NewComment;
@@ -10,13 +11,7 @@ use Plmrlnsnts\Commentator\Tests\TestCase;
 
 class CommentTest extends TestCase
 {
-    /** @test */
-    public function it_has_a_url()
-    {
-        $comment = factory(Comment::class)->create();
-
-        $this->assertEquals(url('/comments/' . $comment->id), $comment->url());
-    }
+    use RefreshDatabase;
 
     /** @test */
     public function it_dispatches_a_new_comment_event_when_it_is_created()
@@ -67,6 +62,18 @@ class CommentTest extends TestCase
     {
         $comment = new Comment(['body' => 'Hi @john']);
 
-        $this->assertEquals('Hi <a href="/profile/john">@john</a>', $comment->body);
+        $this->assertEquals('Hi <a href="/profile/john">@john</a>', $comment->html);
+    }
+
+    /** @test */
+    public function it_can_add_replies()
+    {
+        $this->be(factory(User::class)->create());
+
+        $comment = factory(Comment::class)->create();
+
+        $comment->addReply(['body' => 'Yo!']);
+
+        $this->assertCount(1, $comment->replies);
     }
 }

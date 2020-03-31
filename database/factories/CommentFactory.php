@@ -7,7 +7,7 @@ use Plmrlnsnts\Commentator\Comment;
 use Plmrlnsnts\Commentator\Tests\Fixtures\Commentable;
 use Plmrlnsnts\Commentator\Tests\Fixtures\User;
 
-$factory->define(Comment::class, function (Faker $faker, array $attributes) {
+$factory->define(Comment::class, function (Faker $faker, array $attributes = []) {
     return [
         'user_id' => factory(User::class),
         'commentable_id' => $attributes['commentable_id'] ?? factory(Commentable::class),

@@ -4,11 +4,10 @@ namespace Plmrlnsnts\Commentator;
 
 use Illuminate\Database\Eloquent\Model;
 use Plmrlnsnts\Commentator\NewComment;
+use Stevebauman\Purify\Facades\Purify;
 
 class Comment extends Model
 {
-    use HasComments;
-
     /**
      * The attributes that aren't mass assignable.
      *
@@ -37,6 +36,14 @@ class Comment extends Model
      {
          return $this->belongsTo(config('commentator.models.user'), 'user_id');
      }
+
+     /**
+      * The replies for this comment.
+      */
+      public function replies()
+      {
+          return $this->hasMany(Comment::class, 'parent_id');
+      }
 
      /**
       * Get the commentable model.
@@ -84,26 +91,34 @@ class Comment extends Model
      }
 
      /**
-      * The resource url for this comment.
+      * Get the html representation of the body attribute.
       *
       * @return string
       */
-     public function url()
+     public function getHtmlAttribute()
      {
-         return url('/comments/' . $this->id);
+        $html = preg_replace(
+            config('commentator.mentions.regex'),
+            config('commentator.mentions.replace'),
+            $this->attributes['body']
+        );
+
+        return Purify::clean($html, ['HTML.Allowed' => 'a[href]']);
      }
 
      /**
-      * Set the body attribute
+      * Reply to this comment.
       *
-      * @return string
+      * @param array $values
+      * @return \Plmrlnsnts\Commentator\Comment
       */
-     public function setBodyAttribute($value)
+     public function addReply($values)
      {
-        $this->attributes['body'] = preg_replace(
-            config('commentator.mentions.regex'),
-            config('commentator.mentions.replace'),
-            $value
-        );
+         $values['user_id'] ??= auth()->id();
+
+         $values['commentable_id'] = $this->commentable_id;
+         $values['commentable_type'] = $this->commentable_type;
+
+         return $this->replies()->create($values);
      }
 }

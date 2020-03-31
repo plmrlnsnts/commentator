@@ -6,6 +6,7 @@ use Juampi92\CursorPagination\CursorPaginationServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Plmrlnsnts\Commentator\CommentatorServiceProvider;
 use Plmrlnsnts\Commentator\Tests\Fixtures\User;
+use Stevebauman\Purify\PurifyServiceProvider;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -51,7 +52,7 @@ abstract class TestCase extends BaseTestCase
     {
         return [
             CommentatorServiceProvider::class,
-            CursorPaginationServiceProvider::class,
+            PurifyServiceProvider::class,
         ];
     }
 }
