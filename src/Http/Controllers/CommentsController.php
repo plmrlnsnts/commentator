@@ -36,7 +36,10 @@ class CommentsController
 
         $commentable = Commentator::getCommentable(request('commentableKey'));
 
-        return $commentable->addComment($attributes);
+        return tap($commentable->addComment($attributes), function ($comment) {
+            $comment->load('author');
+            $comment->loadCount('replies');
+        });
     }
 
     /**
@@ -52,7 +55,12 @@ class CommentsController
 
         $attributes = $this->validateRequest($request);
 
-        return tap($comment)->update($attributes);
+        $comment->update($attributes);
+
+        $comment->load('author');
+        $comment->loadCount('replies');
+
+        return $comment;
     }
 
     /**
