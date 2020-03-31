@@ -1,6 +1,6 @@
 <?php
 
-namespace Plmrlnsnts\Commentator;
+namespace Plmrlnsnts\Commentator\Policies;
 
 use Illuminate\Foundation\Auth\User;
 use Plmrlnsnts\Commentator\Comment;

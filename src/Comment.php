@@ -91,7 +91,7 @@ class Comment extends Model
      }
 
      /**
-      * Get the html representation of the body attribute.
+      * The html representation of the body attribute.
       *
       * @return string
       */

@@ -2,8 +2,8 @@
 
 namespace Plmrlnsnts\Commentator\Tests;
 
-use Juampi92\CursorPagination\CursorPaginationServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use Plmrlnsnts\Commentator\Commentator;
 use Plmrlnsnts\Commentator\CommentatorServiceProvider;
 use Plmrlnsnts\Commentator\Tests\Fixtures\User;
 use Stevebauman\Purify\PurifyServiceProvider;
@@ -39,6 +39,8 @@ abstract class TestCase extends BaseTestCase
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('commentator.models.user', User::class);
+
+        Commentator::routes(['middleware' => 'bindings']);
     }
 
     /**

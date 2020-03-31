@@ -3,32 +3,13 @@
 namespace Plmrlnsnts\Commentator\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Route;
 use Plmrlnsnts\Commentator\Comment;
-use Plmrlnsnts\Commentator\Tests\Fixtures\CommentsController;
 use Plmrlnsnts\Commentator\Tests\Fixtures\Commentable;
 use Plmrlnsnts\Commentator\Tests\Fixtures\User;
 
-class SendsCommentsTest extends TestCase
+class CommentsControllerTest extends TestCase
 {
     use RefreshDatabase;
-
-    /**
-     * Setup the test environment.
-     *
-     * @return void
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Route::middleware('bindings')->group(function() {
-            Route::get('/comments', [CommentsController::class, 'index']);
-            Route::post('/comments', [CommentsController::class, 'store']);
-            Route::patch('/comments/{comment}', [CommentsController::class, 'update']);
-            Route::delete('/comments/{comment}', [CommentsController::class, 'destroy']);
-        });
-    }
 
     /** @test */
     public function a_user_can_view_all_comments()
@@ -74,6 +55,8 @@ class SendsCommentsTest extends TestCase
     /** @test */
     public function a_user_can_delete_a_comment()
     {
+        $this->withoutExceptionHandling();
+
         $comment = factory(Comment::class)->create();
 
         $this->be($comment->author);

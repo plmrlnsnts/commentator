@@ -1,6 +1,6 @@
 <?php
 
-namespace Plmrlnsnts\Commentator;
+namespace Plmrlnsnts\Commentator\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use Plmrlnsnts\Commentator\Comment;
 use Plmrlnsnts\Commentator\Facades\Commentator;
 
-trait SendsComments
+class CommentsController
 {
     /**
      * Get all comments.
@@ -40,7 +40,7 @@ trait SendsComments
 
         $comment = $commentable->addComment($attributes);
 
-        return $this->created($request, $comment) ?: new JsonResource($comment);
+        return new JsonResource($comment);
     }
 
     /**
@@ -58,7 +58,7 @@ trait SendsComments
 
         $comment->update($attributes);
 
-        return $this->updated($request, $comment) ?: new JsonResource($comment);
+        return new JsonResource($comment);
     }
 
     /**
@@ -71,7 +71,9 @@ trait SendsComments
     {
         Gate::authorize('delete', $comment);
 
-        return $this->deleted($comment) ?: $comment->delete();
+        $comment->delete();
+
+        return response()->noContent();
     }
 
     /**
@@ -86,40 +88,5 @@ trait SendsComments
             'body' => ['required', 'string'],
             'media' => ['nullable', 'url'],
         ]);
-    }
-
-    /**
-     * The comment has been created.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param mixed $comment
-     * @return mixed
-     */
-    protected function created(Request $request, $comment)
-    {
-        //
-    }
-
-    /**
-     * The comment has been updated.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param mixed $comment
-     * @return mixed
-     */
-    protected function updated(Request $request, $comment)
-    {
-        //
-    }
-
-    /**
-     * The comment has been deleted.
-     *
-     * @param mixed $comment
-     * @return mixed
-     */
-    protected function deleted($comment)
-    {
-        //
     }
 }
