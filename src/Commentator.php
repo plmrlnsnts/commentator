@@ -30,12 +30,15 @@ class Commentator
     public static function routes($options = [])
     {
         $options = array_merge([
+            'middleware' => ['web'],
             'namespace' => 'Plmrlnsnts\Commentator\Http\Controllers'
         ], $options);
 
-        Route::group($options, function ($router) {
-            $router->apiResource('comments', 'CommentsController');
-            $router->apiResource('comments.replies', 'RepliesController');
+        Route::group($options, function () {
+            Route::apiResource('comments', 'CommentsController')->except('show');
+            Route::apiResource('comments.replies', 'RepliesController')
+                ->only('index', 'store')
+                ->shallow();
         });
     }
 }
