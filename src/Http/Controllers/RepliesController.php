@@ -18,6 +18,9 @@ class RepliesController
     {
         return $comment->replies()
             ->with('author')
+            ->when(request('sort') === 'latest', function ($query) {
+                $query->orderByDesc('created_at');
+            })
             ->paginate(request('perPage', 15));
     }
 

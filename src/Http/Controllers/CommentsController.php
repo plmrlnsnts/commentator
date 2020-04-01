@@ -3,7 +3,6 @@
 namespace Plmrlnsnts\Commentator\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Gate;
 use Plmrlnsnts\Commentator\Comment;
 use Plmrlnsnts\Commentator\Facades\Commentator;
@@ -21,6 +20,9 @@ class CommentsController
             ->comments()
             ->with('author')
             ->withCount('replies')
+            ->when(request('sort') === 'latest', function ($query) {
+                $query->orderByDesc('created_at');
+            })
             ->paginate(request('perPage'));
     }
 
