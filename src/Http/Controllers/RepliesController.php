@@ -3,7 +3,6 @@
 namespace Plmrlnsnts\Commentator\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Plmrlnsnts\Commentator\Comment;
 
 class RepliesController
