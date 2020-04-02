@@ -37,8 +37,8 @@ class RepliesController
             'media' => ['nullable', 'url'],
         ]);
 
-        $reply = $comment->addReply($attributes);
-
-        return $reply;
+        return tap($comment->addReply($attributes), function ($reply) {
+            $reply->load('author');
+        });
     }
 }
