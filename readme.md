@@ -71,7 +71,7 @@ If you also support media files, pass an additional `media` attribute.
 ```php
 $article->addComment([
     'body' => 'Yo Mr. White! Check this out.',
-    'image' => 'https://unsplash.com/photos/yplNhhXxBtM',
+    'media' => 'https://unsplash.com/photos/yplNhhXxBtM',
 ]);
 ```
 
