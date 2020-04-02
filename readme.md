@@ -90,7 +90,7 @@ $comment->asHtml();
 
 // <a href="/profile/Pinkman">@Pinkman</a>
 ```
-> The `asHtml` strips any html element except `anchor` tags to prevent xss attacks.
+> The `asHtml` strips any html element except anchor tags to prevent xss attacks.
 
 ### Replies
 
