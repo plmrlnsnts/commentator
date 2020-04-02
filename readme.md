@@ -110,3 +110,11 @@ return [
     ]
 ];
 ```
+
+## Replies
+
+If you want to support nested comments, use the `addReply` method.
+
+```php
+$comment->addReply(['body' => 'I am Heisenberg.']);
+```
