@@ -48,6 +48,8 @@ class Article extends Model
 }
 ```
 
+### Comments
+
 To add a comment to your model, use the `addComment` method.
 
 ```php
@@ -65,7 +67,7 @@ $article->addComment([
 ]);
 ```
 
-## Mentions
+### Mentions
 
 A user can be mentioned using `@` followed by a combination of alphanumeric characters, underscores and hypens.
 
@@ -90,13 +92,117 @@ $comment->asHtml();
 ```
 > The `asHtml` strips any html element except `anchor` tags to prevent xss attacks.
 
-## Replies
+### Replies
 
 If you want to support nested comments, use the `addReply` method.
 
 ```php
 $comment->addReply(['body' => 'I am Heisenberg.']);
 ```
+
+## JSON API
+
+Commentator provides a JSON API that you may use to manage comments. This saves you the trouble of having to manually code controllers for creating, updating, and deleting comments. 
+
+#### `GET /comments`
+
+This route returns a paginated list of comments for a given model. You need to pass the `commentableKey`, and an optional `sort` parameter to order the result from `latest`.
+
+```javascript
+const params = {
+    commentableKey: 'SOMESTRING',
+    sort: 'latest',
+    page: 1,
+    perPage: 10,
+}
+
+axios.get('/comments', { params })
+    .then(response => {
+        console.log(response.data)
+    })
+```
+
+#### `POST /comments`
+
+This route is used to create new comments. It accepts two pieces of data: a body and/or a media. 
+
+```javascript
+const data = {
+    body: 'Yo, Mr. White! Check this out.',
+    media: 'https://unsplash.com/photos/yplNhhXxBtM',
+    commentableKey: 'SOMESTRING',
+}
+
+axios.post('/comments', data)
+    .then(response => {
+        console.log(response.data)
+    })
+```
+
+#### `PATCH /comments/{comment}`
+
+This route is used to update comments. It accepts two pieces of data: a body and/or a media.
+
+```javascript
+const data = {
+    body: 'Changed',
+}
+
+axios.patch(`/comments/${commment.id}`, data)
+    .then(response => {
+        console.log(response.data)
+    })
+```
+
+> Only comments that are *owned* by the authenticated user can be deleted, otherwise it will throw a `403 Forbidden` error response.
+
+#### `DELETE /comments/{comment}`
+
+This route is used to delete comments.
+
+```javascript
+axios.delete(`/comments/${commment.id}`)
+    .then(response => {
+        //
+    })
+```
+
+> Only comments that are *owned* by the authenticated user can be deleted, otherwise it will throw a `403 Forbidden` error response.
+
+#### `GET /comments/{comment}/replies`
+
+This route returns a paginated list of replies for a comment. You may pass an optional `sort` parameter to order the result from `latest`.
+
+```javascript
+const params = {
+    sort: 'latest',
+    page: 1,
+    perPage: 10,
+}
+
+axios.get(`/comments/${comment.id}/replies`, { params })
+    .then(response => {
+        console.log(response.data)
+    })
+```
+
+#### `POST /comments/{comment}/replies`
+
+This route is used to reply to a comment. It accepts two pieces of data: a body and/or a media. 
+
+```javascript
+const data = {
+    body: 'Yo, Mr. White! Check this out.',
+    media: 'https://unsplash.com/photos/yplNhhXxBtM',
+}
+
+axios.post(`/comments/${comment.id}/replies`, data)
+    .then(response => {
+        console.log(response.data)
+    })
+```
+
+> Replies are **comments too!**. So you can re-use the same routes for updating and deleting replies. 
 
 ## Configuration
 
