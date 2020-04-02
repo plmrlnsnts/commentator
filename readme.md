@@ -2,7 +2,7 @@
 
 You're supposed to be using a third-party comment system not this.
 
-But if you really need to, this package lets you add a comments to your models.
+But if you really need to, this package lets you add comments to your models.
 
 ## Install
 
@@ -45,7 +45,7 @@ public function boot()
 
 ## Usage
 
-Add the `HasComments` trait to any of your eloquent models.
+Add the `HasComments` trait to your eloquent models. You also need to append the `commentableKey` attribute.
 
 ```php
 class Article extends Model
@@ -58,19 +58,55 @@ class Article extends Model
 }
 ```
 
-To add a comment to your model,
+To add a comment to your model, use the `addComment` method.
 
 ```php
 $article = Article::first();
 
-$article->addComment(['body' => 'Say my name.']);
+$article->addComment(['body' => 'Better call Saul!']);
 ```
 
-If you also support media uploads, pass an additional `media` attribute.
+If you also support media files, pass an additional `media` attribute.
 
 ```php
 $article->addComment([
-    'body' => 'Yo, check this out.',
+    'body' => 'Yo Mr. White! Check this out.',
     'image' => 'https://unsplash.com/photos/yplNhhXxBtM',
 ]);
+```
+
+## Mentions
+
+A user can be mentioned using `@` followed by a combination of alphanumeric characters, underscores and hypens.
+
+```php
+$comment = $article->addComment(['body' => '@Pinkman']);
+```
+
+You can use the `mentionedName` method to retrieve an array of mentions.
+
+```php
+$comment->mentionedNames();
+
+// ['Pinkman']
+```
+
+Mentions are transformed to anchor tags by calling `asHtml` to a comment instance.
+
+```php
+$comment->asHtml();
+
+// <a href="/profile/Pinkman">@Pinkman</a>
+```
+>>> The `asHtml` strips any html element except `anchor` tags to prevent `xss` attacks.
+
+The regular expression used to detect mentions and the transformed link can be modified from the `config` file.
+
+```php
+return [
+   'mentions' => [
+        'regex' => '/@([\w\-]+)/',
+        'replace' => '<a href="/profile/$1">@$1</a>'
+    ]
+];
 ```
