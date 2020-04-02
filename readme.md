@@ -2,7 +2,7 @@
 
 You're supposed to be using a third-party comment system not this.
 
-But if you really need to, this package lets you add a comment section to your pages.
+But if you really need to, this package lets you add a comments to your models.
 
 ## Install
 
@@ -10,15 +10,13 @@ But if you really need to, this package lets you add a comment section to your p
 $ composer require plmrlnsnts/commentator
 ```
 
-## Prerequisites
-
-Run the following command to publish files we will need later on.
+Run the following command to publish config and migration files.
 
 ```bash
 php artisan vendor:publish --provider="Plmrlnsnts\Commentator\CommentatorServiceProvider"
 ```
 
-You can change the `User` namespace in `config/commentator.php`.
+If you are using a different namespace for the `User` model, change them in `config/commentator.php`.
 
 ```php
 return [
@@ -34,50 +32,45 @@ Run the migrations.
 php artisan migrate
 ```
 
-## Models
+Next, register the routes to manage comments in the `boot` method of your `AppServiceProvider`.
 
-Users may start adding comments once the `HasComments` trait has been added to an eloquent model.
+```php
+use Plmrlnsnts\Commentator\Commentator;
+
+public function boot()
+{
+    Commentator::routes();
+}
+```
+
+## Usage
+
+Add the `HasComments` trait to any of your eloquent models.
 
 ```php
 class Article extends Model
 {
     use \Plmrlnsnts\Commentator\HasComments;
+    
+    protected $appends = [
+        'commentableKey'
+    ];
 }
 ```
 
-## Livewire
-
-This package has few Livewire components that can display a comment section in any of your blade templates. Here is a template to get you started.
+To add a comment to your model,
 
 ```php
-<html>
-<head>
-    ...
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-    @livewireStyles
-</head>
+$article = Article::first();
 
-<body>
-    <main>
-        ...
-        @livewire('commentator::comments', ['commentable' => $article])
-    </main>
-
-    ...
-    @livewireScripts
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine-ie11.js" defer></script>
-</body>
-</html>
+$article->addComment(['body' => 'Say my name.']);
 ```
 
-## Customizations
+If you also support media uploads, pass an additional `media` attribute.
 
-Unsatistfied with the default appearance? Modify the component views in `resources/views/vendor/commentator` directory to match your preference.
-
-## API Controllers
-
-There is also an artisan command to scaffold the comment controller and routes for you.
-
-```bash
-php artisan commentator:make
+```php
+$article->addComment([
+    'body' => 'Yo, check this out.',
+    'image' => 'https://unsplash.com/photos/yplNhhXxBtM',
+]);
 ```
