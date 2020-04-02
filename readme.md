@@ -202,7 +202,7 @@ axios.post(`/comments/${comment.id}/replies`, data)
     })
 ```
 
-> Replies are **comments too!**. So you can re-use the same routes for updating and deleting replies. 
+> Replies are **comments too!** So you can re-use the same routes for updating and deleting replies. 
 
 ## Configuration
 
