@@ -2,9 +2,9 @@
 
 You're supposed to be using a third-party comment system not this.
 
-But if you really need to, this package lets you add comments to your models.
+But if you really need to, this package lets you add comments to your Eloquent models.
 
-## Install
+## Installation
 
 ``` bash
 $ composer require plmrlnsnts/commentator
@@ -14,16 +14,6 @@ Run the following command to publish config and migration files.
 
 ```bash
 php artisan vendor:publish --provider="Plmrlnsnts\Commentator\CommentatorServiceProvider"
-```
-
-If you are using a different namespace for the `User` model, change them in `config/commentator.php`.
-
-```php
-return [
-    'models' => [
-        'user' => \App\Models\User::class
-    ]
-];
 ```
 
 Run the migrations.
@@ -100,7 +90,31 @@ $comment->asHtml();
 ```
 > The `asHtml` strips any html element except `anchor` tags to prevent xss attacks.
 
-The regular expression used to detect mentions and the transformed link can be modified from the `config` file.
+## Replies
+
+If you want to support nested comments, use the `addReply` method.
+
+```php
+$comment->addReply(['body' => 'I am Heisenberg.']);
+```
+
+## Configuration
+
+### User Model
+
+Commentator references the current `User` model as the author when adding comments. If you are using a different namespace, change them in `config/commentator.php`.
+
+```php
+return [
+    'models' => [
+        'user' => \App\Models\User::class
+    ]
+];
+```
+
+### Mentions
+
+The regular expression used to identify mentions, and the parsed link can be modified from the `config` file.
 
 ```php
 return [
@@ -109,12 +123,4 @@ return [
         'replace' => '<a href="/profile/$1">@$1</a>'
     ]
 ];
-```
-
-## Replies
-
-If you want to support nested comments, use the `addReply` method.
-
-```php
-$comment->addReply(['body' => 'I am Heisenberg.']);
 ```
