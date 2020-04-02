@@ -27,7 +27,7 @@ class Commentator
      *
      * @return void
      */
-    public static function routes($options = [])
+    public function routes($options = [])
     {
         $options = array_merge([
             'middleware' => ['web'],

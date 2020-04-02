@@ -33,7 +33,7 @@ class RepliesController
     public function store(Request $request, Comment $comment)
     {
         $attributes = $request->validate([
-            'body' => ['required_without:media', 'string'],
+            'body' => ['required_without:media', 'nullable', 'string'],
             'media' => ['nullable', 'url'],
         ]);
 

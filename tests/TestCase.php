@@ -3,8 +3,8 @@
 namespace Plmrlnsnts\Commentator\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Plmrlnsnts\Commentator\Commentator;
 use Plmrlnsnts\Commentator\CommentatorServiceProvider;
+use Plmrlnsnts\Commentator\Facades\Commentator;
 use Plmrlnsnts\Commentator\Tests\Fixtures\User;
 use Stevebauman\Purify\PurifyServiceProvider;
 

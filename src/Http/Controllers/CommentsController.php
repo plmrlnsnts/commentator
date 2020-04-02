@@ -89,7 +89,7 @@ class CommentsController
     protected function validateRequest(Request $request)
     {
         return $request->validate([
-            'body' => ['required_without:media', 'string'],
+            'body' => ['required_without:media', 'nullable', 'string'],
             'media' => ['nullable', 'url'],
         ]);
     }

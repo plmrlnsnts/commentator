@@ -19,7 +19,7 @@ class CreateCommentsTable extends Migration
                 ->references('id')->on('comments')
                 ->onDelete('cascade');
             $table->morphs('commentable');
-            $table->text('body');
+            $table->text('body')->nullable();
             $table->text('media')->nullable();
             $table->timestamps();
         });
