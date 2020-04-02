@@ -4,6 +4,10 @@ You're supposed to be using a third-party comment system not this.
 
 But if you really need to, this package lets you add comments to your Eloquent models.
 
+## Demo
+
+Play around with this [demo project](https://commentator-demo.herokuapp.com/)
+
 ## Installation
 
 ``` bash
