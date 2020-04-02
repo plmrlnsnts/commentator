@@ -154,7 +154,7 @@ axios.patch(`/comments/${commment.id}`, data)
     })
 ```
 
-> Only comments that are *owned* by the authenticated user can be deleted, otherwise it will throw a `403 Forbidden` error response.
+> Only comments that are *owned* by the authenticated user can be updated.
 
 #### `DELETE /comments/{comment}`
 
@@ -167,7 +167,7 @@ axios.delete(`/comments/${commment.id}`)
     })
 ```
 
-> Only comments that are *owned* by the authenticated user can be deleted, otherwise it will throw a `403 Forbidden` error response.
+> Only comments that are *owned* by the authenticated user can be deleted.
 
 #### `GET /comments/{comment}/replies`
 
