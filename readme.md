@@ -83,7 +83,7 @@ A user can be mentioned using `@` followed by a combination of alphanumeric char
 $comment = $article->addComment(['body' => '@Pinkman']);
 ```
 
-You can use the `mentionedName` method to retrieve an array of mentions.
+Call the `mentionedNames` method to retrieve an array of mentions.
 
 ```php
 $comment->mentionedNames();
@@ -98,7 +98,7 @@ $comment->asHtml();
 
 // <a href="/profile/Pinkman">@Pinkman</a>
 ```
->>> The `asHtml` strips any html element except `anchor` tags to prevent `xss` attacks.
+> The `asHtml` strips any html element except `anchor` tags to prevent xss attacks.
 
 The regular expression used to detect mentions and the transformed link can be modified from the `config` file.
 
