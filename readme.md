@@ -71,7 +71,7 @@ $article->addComment([
 
 ### Mentions
 
-A user can be mentioned using `@` followed by a combination of alphanumeric characters, underscores and hypens.
+A user can be mentioned using `@` symbol, followed by a combination of alphanumeric characters, underscores and hypens.
 
 ```php
 $comment = $article->addComment(['body' => '@Pinkman']);
@@ -106,7 +106,7 @@ $comment->addReply(['body' => 'I am Heisenberg.']);
 
 Commentator provides a JSON API that you may use to manage comments. This saves you the trouble of having to manually code controllers for creating, updating, and deleting comments.
 
-#### `GET /comments`
+##### `GET /comments`
 
 This route returns a paginated list of comments for a given model. You need to pass the `commentableKey`, and an optional `sort` parameter to order the result from `latest`.
 
@@ -124,7 +124,7 @@ axios.get('/comments', { params })
     })
 ```
 
-#### `POST /comments`
+##### `POST /comments`
 
 This route is used to create new comments. It accepts two pieces of data: a body and/or a media.
 
@@ -141,7 +141,7 @@ axios.post('/comments', data)
     })
 ```
 
-#### `PATCH /comments/{comment}`
+##### `PATCH /comments/{comment}`
 
 This route is used to update comments. It accepts two pieces of data: a body and/or a media.
 
@@ -158,7 +158,7 @@ axios.patch(`/comments/${commment.id}`, data)
 
 > Only comments that are *owned* by the authenticated user can be updated.
 
-#### `DELETE /comments/{comment}`
+##### `DELETE /comments/{comment}`
 
 This route is used to delete comments.
 
@@ -171,7 +171,7 @@ axios.delete(`/comments/${commment.id}`)
 
 > Only comments that are *owned* by the authenticated user can be deleted.
 
-#### `GET /comments/{comment}/replies`
+##### `GET /comments/{comment}/replies`
 
 This route returns a paginated list of replies for a comment. You may pass an optional `sort` parameter to order the result from `latest`.
 
@@ -188,7 +188,7 @@ axios.get(`/comments/${comment.id}/replies`, { params })
     })
 ```
 
-#### `POST /comments/{comment}/replies`
+##### `POST /comments/{comment}/replies`
 
 This route is used to reply to a comment. It accepts two pieces of data: a body and/or a media.
 
