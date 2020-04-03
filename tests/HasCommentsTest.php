@@ -31,4 +31,12 @@ class HasCommentsTest extends TestCase
 
         $this->assertEquals($expected, $commentable->commentableKey());
     }
+
+    /** @test */
+    public function it_appends_the_commentable_key_to_the_model()
+    {
+        $commentable = factory(Commentable::class)->create();
+
+        $this->assertTrue(array_key_exists('commentableKey', $commentable->toArray()));
+    }
 }

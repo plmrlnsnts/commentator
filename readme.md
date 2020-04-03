@@ -39,16 +39,14 @@ public function boot()
 
 ## Usage
 
-Add the `HasComments` trait to your eloquent models. You also need to append the `commentableKey` attribute.
+Add the `HasComments` trait to your eloquent models.
 
 ```php
+use Plmrlnsnts\Commentator\HasComments;
+
 class Article extends Model
 {
-    use \Plmrlnsnts\Commentator\HasComments;
-    
-    protected $appends = [
-        'commentableKey'
-    ];
+    use HasComments;
 }
 ```
 
@@ -106,7 +104,7 @@ $comment->addReply(['body' => 'I am Heisenberg.']);
 
 ## JSON API
 
-Commentator provides a JSON API that you may use to manage comments. This saves you the trouble of having to manually code controllers for creating, updating, and deleting comments. 
+Commentator provides a JSON API that you may use to manage comments. This saves you the trouble of having to manually code controllers for creating, updating, and deleting comments.
 
 #### `GET /comments`
 
@@ -128,7 +126,7 @@ axios.get('/comments', { params })
 
 #### `POST /comments`
 
-This route is used to create new comments. It accepts two pieces of data: a body and/or a media. 
+This route is used to create new comments. It accepts two pieces of data: a body and/or a media.
 
 ```javascript
 const data = {
@@ -192,7 +190,7 @@ axios.get(`/comments/${comment.id}/replies`, { params })
 
 #### `POST /comments/{comment}/replies`
 
-This route is used to reply to a comment. It accepts two pieces of data: a body and/or a media. 
+This route is used to reply to a comment. It accepts two pieces of data: a body and/or a media.
 
 ```javascript
 const data = {
@@ -206,7 +204,7 @@ axios.post(`/comments/${comment.id}/replies`, data)
     })
 ```
 
-> Replies are **comments too!** So you can re-use the same routes for updating and deleting replies. 
+> Replies are **comments too!** So you can re-use the same routes for updating and deleting replies.
 
 ## Configuration
 

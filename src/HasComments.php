@@ -19,6 +19,16 @@ trait HasComments
     }
 
     /**
+     * Initialize the trait.
+     *
+     * @return void
+     */
+    public function initializeHasComments()
+    {
+        $this->appends[] = 'commentableKey';
+    }
+
+    /**
      * The comments associated to this model.
      */
     public function comments()
