@@ -1,8 +1,6 @@
 # Commentator 🤭
 
-You're supposed to be using a third-party comment system not this.
-
-But if you really need to, this package lets you add comments to your Eloquent models.
+If you ever need comments for your projects, here is something to get you started.
 
 ## Demo
 
